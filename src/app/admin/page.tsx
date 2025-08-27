@@ -20,13 +20,13 @@ import { categories } from "@/lib/data";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Le titre est requis."),
-  description: z.string().min(1, "La description est requise."),
+  description: z.string().optional(),
   category: z.enum(['portails', 'barrieres', 'rampes', 'installations', 'expositions'], {
     errorMap: () => ({ message: "Veuillez sélectionner une catégorie." })
   }),
-  year: z.coerce.number().min(1900, "L'année doit être valide."),
-  location: z.string().min(1, "Le lieu est requis."),
-  imageUrl: z.string().url("L'URL de l'image n'est pas valide."),
+  year: z.coerce.number().optional(),
+  location: z.string().optional(),
+  imageUrl: z.string().optional(),
 });
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
@@ -78,7 +78,7 @@ export default function AdminPage() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>Description (Optionnel)</FormLabel>
                     <FormControl>
                       <Textarea placeholder="Décrivez le projet en quelques mots..." {...field} />
                     </FormControl>
@@ -114,7 +114,7 @@ export default function AdminPage() {
                   name="year"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Année</FormLabel>
+                      <FormLabel>Année (Optionnel)</FormLabel>
                       <FormControl>
                         <Input type="number" placeholder="2023" {...field} />
                       </FormControl>
@@ -127,7 +127,7 @@ export default function AdminPage() {
                   name="location"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Lieu</FormLabel>
+                      <FormLabel>Lieu (Optionnel)</FormLabel>
                       <FormControl>
                         <Input placeholder="Douala" {...field} />
                       </FormControl>
@@ -142,7 +142,7 @@ export default function AdminPage() {
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>URL de l'image</FormLabel>
+                    <FormLabel>URL de l'image (Optionnel)</FormLabel>
                     <FormControl>
                       <Input placeholder="https://picsum.photos/600/400" {...field} />
                     </FormControl>
