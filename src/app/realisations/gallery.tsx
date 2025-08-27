@@ -9,6 +9,7 @@ import type { Project, ProjectCategory } from "@/lib/data";
 import {
   Dialog,
   DialogContent,
+  DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 
@@ -57,6 +58,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
                   </div>
                 </DialogTrigger>
                 <DialogContent className="max-w-4xl p-0 border-0">
+                   <DialogTitle className="sr-only">{project.title}</DialogTitle>
                    <div className="relative aspect-video">
                     <Image
                       src={project.imageUrl}
