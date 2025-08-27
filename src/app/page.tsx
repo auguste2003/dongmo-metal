@@ -43,7 +43,7 @@ export default function Home() {
             {featuredProjects.map((project) => (
               <Card key={project.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <CardHeader className="p-0">
-                  <div className="aspect-w-4 aspect-h-3 relative">
+                  <div className="relative aspect-[4/3]">
                     <Image
                       src={project.imageUrl}
                       alt={project.title}
@@ -54,10 +54,10 @@ export default function Home() {
                   </div>
                 </CardHeader>
                 <CardContent className="p-4 md:p-6 flex-grow flex flex-col">
-                  <CardTitle className="text-base md:text-xl font-bold mb-2">{project.title}</CardTitle>
-                  <CardDescription className="text-sm text-muted-foreground flex-grow hidden md:block">{project.description}</CardDescription>
+                  <CardTitle className="text-xl font-bold mb-2">{project.title}</CardTitle>
+                  <CardDescription className="text-muted-foreground flex-grow">{project.description}</CardDescription>
                   <div className="mt-4">
-                    <WhatsAppButton size="sm" className="w-full text-xs" message={`Bonjour, je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
+                    <WhatsAppButton size="sm" className="w-full" message={`Bonjour, je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
                       Discutons-en
                     </WhatsAppButton>
                   </div>
