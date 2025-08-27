@@ -16,38 +16,36 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="fr">
-            <body>
-                <AuthProvider>
-                    <ProtectedRoute>
-                        <SidebarProvider>
-                            <Sidebar>
-                                <SidebarHeader>
-                                    <SidebarTrigger />
-                                </SidebarHeader>
-                                <SidebarMenu>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton href="/admin" isActive={true} tooltip="Projets">
-                                            <LayoutGrid />
-                                            <span>Projets</span>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton href="#" tooltip="Services">
-                                            <GanttChartSquare />
-                                            <span>Services</span>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                </SidebarMenu>
-                            </Sidebar>
-                            <SidebarInset>
-                                {children}
-                            </SidebarInset>
-                        </SidebarProvider>
-                    </ProtectedRoute>
-                    <Toaster />
-                </AuthProvider>
-            </body>
-        </html>
+        <>
+            <AuthProvider>
+                <ProtectedRoute>
+                    <SidebarProvider>
+                        <Sidebar>
+                            <SidebarHeader>
+                                <SidebarTrigger />
+                            </SidebarHeader>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton href="/admin" isActive={true} tooltip="Projets">
+                                        <LayoutGrid />
+                                        <span>Projets</span>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton href="#" tooltip="Services">
+                                        <GanttChartSquare />
+                                        <span>Services</span>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </Sidebar>
+                        <SidebarInset>
+                            {children}
+                        </SidebarInset>
+                    </SidebarProvider>
+                </ProtectedRoute>
+                <Toaster />
+            </AuthProvider>
+        </>
     );
 }
