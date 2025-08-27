@@ -39,7 +39,7 @@ export default function Home() {
       <section id="featured" className="py-12 md:py-20 bg-background">
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Nos Réalisations à la Une</h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-3 md:gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {featuredProjects.map((project) => (
               <Card key={project.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <CardHeader className="p-0">
