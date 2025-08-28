@@ -1,4 +1,3 @@
-
 import { Sidebar, SidebarProvider, SidebarInset, SidebarHeader, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { LayoutGrid, GanttChartSquare } from "lucide-react";
 import { AuthProvider } from "@/context/auth-context";
@@ -7,6 +6,7 @@ import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
 import { Logo } from "@/components/logo";
+import { siteConfig } from "@/lib/data";
 
 
 export default function AdminLayout({
@@ -22,7 +22,7 @@ export default function AdminLayout({
                     <SidebarProvider>
                         <Sidebar>
                              <SidebarHeader className="p-4 justify-start">
-                               <Link href="/" aria-label="Accueil DONGMO METAL CONCEPTION">
+                               <Link href="/" aria-label={`Accueil ${siteConfig.name}`}>
                                   <Logo />
                                </Link>
                             </SidebarHeader>
@@ -54,5 +54,3 @@ export default function AdminLayout({
         </AuthProvider>
     );
 }
-
-    

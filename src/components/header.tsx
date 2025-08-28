@@ -3,6 +3,7 @@ import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import { Menu } from 'lucide-react';
 import { Logo } from './logo';
+import { siteConfig } from '@/lib/data';
 
 export function Header() {
   const navLinks = [
@@ -15,7 +16,7 @@ export function Header() {
   return (
     <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" aria-label="Accueil DONGMO METAL CONCEPTION">
+        <Link href="/" aria-label={`Accueil ${siteConfig.name}`}>
           <Logo />
         </Link>
         
@@ -45,6 +46,7 @@ export function Header() {
                 <Link 
                   href="/" 
                   className="flex items-center gap-2 text-lg font-semibold mb-4"
+                  aria-label={`Accueil ${siteConfig.name}`}
                 >
                   <Logo />
                 </Link>

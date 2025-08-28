@@ -1,6 +1,7 @@
 import { Facebook, Instagram, Phone, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Logo } from './logo';
+import { siteConfig } from '@/lib/data';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -10,7 +11,7 @@ export function Footer() {
     <footer className="bg-primary text-primary-foreground mt-12">
       <div className="container mx-auto px-4 md:px-6 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-            <Link href="/" aria-label="Accueil DONGMO METAL CONCEPTION">
+            <Link href="/" aria-label={`Accueil ${siteConfig.name}`}>
               <Logo />
             </Link>
           <div className="flex gap-5">
@@ -21,7 +22,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-6 pt-6 border-t border-primary-foreground/20 text-center text-primary-foreground/70 text-sm">
-          <p>&copy; {currentYear} DONGMO METAL CONCEPTION. Tous droits réservés.</p>
+          <p>&copy; {currentYear} {siteConfig.name}. Tous droits réservés.</p>
         </div>
       </div>
     </footer>

@@ -4,9 +4,10 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/context/auth-context';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { siteConfig } from '@/lib/data';
 
 export const metadata: Metadata = {
-  title: 'DONGMO METAL CONCEPTION - Le métal au service de vos idées',
+  title: `${siteConfig.name} - Le métal au service de vos idées`,
   description: 'Artisan soudeur au Cameroun. Créations sur mesure de portails, barrières, rampes et plus. Solidité, élégance, fiabilité.',
 };
 

@@ -1,5 +1,9 @@
 import { Wrench, Home, ShieldCheck, Store, Gem, CheckCircle, User, MapPin, Sparkles as SparklesIcon } from 'lucide-react';
 
+export const siteConfig = {
+  name: "DONGMO METAL CONCEPTION",
+};
+
 export type ProjectCategory = 'portails' | 'barrieres' | 'rampes' | 'installations' | 'expositions';
 
 export interface Project {

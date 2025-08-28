@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { services } from "@/lib/data";
+import { services, siteConfig } from "@/lib/data";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Services - DONGMO METAL CONCEPTION',
+  title: `Services - ${siteConfig.name}`,
   description: 'Découvrez nos services: conception sur mesure, installation, réparation et entretien d\'ouvrages métalliques.',
 };
 
