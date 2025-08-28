@@ -11,7 +11,7 @@ export function Logo() {
           height={40}
           priority 
         />
-        <span className="font-bold text-lg whitespace-nowrap hidden sm:inline">{siteConfig.name}</span>
+        <span className="font-bold text-base sm:text-lg whitespace-nowrap">{siteConfig.name}</span>
     </div>
   );
 }
