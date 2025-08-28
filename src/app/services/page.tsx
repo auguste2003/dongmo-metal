@@ -4,7 +4,7 @@ import { WhatsAppButton } from "@/components/whatsapp-button";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Services - Metal Expressions',
+  title: 'Services - DONGMO METAL CONCEPTION',
   description: 'Découvrez nos services: conception sur mesure, installation, réparation et entretien d\'ouvrages métalliques.',
 };
 

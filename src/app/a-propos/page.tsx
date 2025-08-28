@@ -7,8 +7,8 @@ import { db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 export const metadata: Metadata = {
-  title: 'À Propos - Metal Expressions',
-  description: 'Découvrez l\'artisan derrière Metal Expressions, sa passion pour le métal et ses valeurs: solidité, élégance, fiabilité.',
+  title: 'À Propos - DONGMO METAL CONCEPTION',
+  description: 'Découvrez l\'artisan derrière DONGMO METAL CONCEPTION, sa passion pour le métal et ses valeurs: solidité, élégance, fiabilité.',
 };
 
 async function getAboutData() {
@@ -32,7 +32,7 @@ export default async function AboutPage() {
   const imageUrl = aboutData?.imageUrl || defaultImage;
 
   const defaultStory = `Depuis mon plus jeune âge, j'ai été fasciné par la transformation du métal brut en objet d'art et d'utilité. Ce qui a commencé comme une curiosité dans l'atelier familial est devenu une véritable passion, puis mon métier. 
-Aujourd'hui, avec Metal Expressions, je mets mon savoir-faire à votre service pour réaliser des projets qui allient la robustesse de l'acier à l'élégance du design. Chaque projet est une nouvelle aventure, une collaboration pour donner vie à vos idées.`;
+Aujourd'hui, avec DONGMO METAL CONCEPTION, je mets mon savoir-faire à votre service pour réaliser des projets qui allient la robustesse de l'acier à l'élégance du design. Chaque projet est une nouvelle aventure, une collaboration pour donner vie à vos idées.`;
   const story = aboutData?.story || defaultStory;
 
   return (

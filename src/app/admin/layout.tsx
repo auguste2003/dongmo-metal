@@ -6,6 +6,7 @@ import { ProtectedRoute } from "@/components/protected-route";
 import { Toaster } from "@/components/ui/toaster";
 import Link from "next/link";
 import { AdminHeader } from "@/components/admin-header";
+import { Logo } from "@/components/logo";
 
 
 export default function AdminLayout({
@@ -21,8 +22,8 @@ export default function AdminLayout({
                     <SidebarProvider>
                         <Sidebar>
                              <SidebarHeader className="p-4 justify-start">
-                               <Link href="/" className="text-2xl font-bold text-primary font-headline" aria-label="Accueil Metal Expressions">
-                                  Metal<span className="text-accent">Expressions</span>
+                               <Link href="/" aria-label="Accueil DONGMO METAL CONCEPTION">
+                                  <Logo />
                                </Link>
                             </SidebarHeader>
                             <SidebarMenu>

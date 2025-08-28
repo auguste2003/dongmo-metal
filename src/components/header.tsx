@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet';
 import { Menu } from 'lucide-react';
+import { Logo } from './logo';
 
 export function Header() {
   const navLinks = [
@@ -14,8 +15,8 @@ export function Header() {
   return (
     <header className="bg-background/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="text-2xl font-bold text-primary font-headline" aria-label="Accueil Metal Expressions">
-          Metal<span className="text-accent">Expressions</span>
+        <Link href="/" aria-label="Accueil DONGMO METAL CONCEPTION">
+          <Logo />
         </Link>
         
         {/* Desktop Navigation */}
@@ -45,7 +46,7 @@ export function Header() {
                   href="/" 
                   className="flex items-center gap-2 text-lg font-semibold mb-4"
                 >
-                  <span className="text-2xl font-bold text-primary font-headline">Metal<span className="text-accent">Expressions</span></span>
+                  <Logo />
                 </Link>
                 {navLinks.map((link) => (
                   <Link

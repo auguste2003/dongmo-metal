@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Contact - Metal Expressions',
+  title: 'Contact - DONGMO METAL CONCEPTION',
   description: 'Contactez-nous pour vos projets de ferronnerie. Retrouvez nos horaires, notre adresse et nos contacts directs via WhatsApp, téléphone et réseaux sociaux.',
 };
 
@@ -95,7 +95,7 @@ export default function ContactPage() {
                         allowFullScreen={true}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        title="Localisation de l'atelier Metal Expressions"
+                        title="Localisation de l'atelier DONGMO METAL CONCEPTION"
                     ></iframe>
                 </div>
             </Card>
