@@ -10,8 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyBMBZuNkoF57EfPNo1DlOmZ1mtiKtd7EQs",
   authDomain: "metal-expressions.firebaseapp.com",
   measurementId: "",
-  messagingSenderId: "207635817802",
-  mapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY"
+  messagingSenderId: "207635817802"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Phone, MessageCircle, Facebook, Instagram, Clock, MapPin } from 'lucide-react';
 import Link from "next/link";
 import type { Metadata } from 'next';
-import { Map } from "@/components/map";
 
 export const metadata: Metadata = {
   title: 'Contact - Metal Expressions',
@@ -18,6 +17,8 @@ const facebookLink = "#";
 const instagramLink = "#";
 
 export default function ContactPage() {
+  const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127347.33230681554!2d9.66591205128362!3d4.048388879007798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10610d4e3345156d%3A0xfa938e5a5933a34!2sDouala%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1688568750132!5m2!1sen!2sus";
+
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
       <div className="text-center mb-12">
@@ -86,7 +87,16 @@ export default function ContactPage() {
         <div>
             <Card className="overflow-hidden shadow-lg h-full">
                 <div className="aspect-w-4 aspect-h-3 h-full min-h-[400px]">
-                  <Map />
+                    <iframe
+                        src={mapEmbedUrl}
+                        width="100%"
+                        height="100%"
+                        style={{ border: 0 }}
+                        allowFullScreen={true}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                        title="Localisation de l'atelier Metal Expressions"
+                    ></iframe>
                 </div>
             </Card>
         </div>
