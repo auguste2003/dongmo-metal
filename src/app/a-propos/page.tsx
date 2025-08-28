@@ -11,23 +11,29 @@ export const metadata: Metadata = {
   description: 'Découvrez l\'artisan derrière Metal Expressions, sa passion pour le métal et ses valeurs: solidité, élégance, fiabilité.',
 };
 
-async function getAboutImage() {
+async function getAboutData() {
   try {
     const aboutDocRef = doc(db, "site_config", "about");
     const docSnap = await getDoc(aboutDocRef);
     if (docSnap.exists()) {
-      return docSnap.data().imageUrl as string;
+      return docSnap.data() as { imageUrl?: string; story?: string };
     }
     return null;
   } catch (error) {
-    console.error("Error fetching about image:", error);
+    console.error("Error fetching about data:", error);
     return null;
   }
 }
 
 export default async function AboutPage() {
-  const imageUrl = await getAboutImage();
+  const aboutData = await getAboutData();
+  
   const defaultImage = "https://picsum.photos/450/600";
+  const imageUrl = aboutData?.imageUrl || defaultImage;
+
+  const defaultStory = `Depuis mon plus jeune âge, j'ai été fasciné par la transformation du métal brut en objet d'art et d'utilité. Ce qui a commencé comme une curiosité dans l'atelier familial est devenu une véritable passion, puis mon métier. 
+Aujourd'hui, avec Metal Expressions, je mets mon savoir-faire à votre service pour réaliser des projets qui allient la robustesse de l'acier à l'élégance du design. Chaque projet est une nouvelle aventure, une collaboration pour donner vie à vos idées.`;
+  const story = aboutData?.story || defaultStory;
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
@@ -43,7 +49,7 @@ export default async function AboutPage() {
           <Card className="overflow-hidden shadow-xl">
             <div className="relative w-full aspect-[3/4]">
               <Image
-                src={imageUrl || defaultImage}
+                src={imageUrl}
                 alt="Portrait de l'artisan soudeur"
                 data-ai-hint="welder portrait"
                 fill
@@ -55,12 +61,10 @@ export default async function AboutPage() {
         </div>
         <div className="md:col-span-3">
           <h2 className="text-3xl font-bold mb-4">Mon Histoire</h2>
-          <p className="text-muted-foreground text-base leading-relaxed mb-4">
-            Depuis mon plus jeune âge, j'ai été fasciné par la transformation du métal brut en objet d'art et d'utilité. Ce qui a commencé comme une curiosité dans l'atelier familial est devenu une véritable passion, puis mon métier. 
-          </p>
-          <p className="text-muted-foreground text-base leading-relaxed">
-            Aujourd'hui, avec Metal Expressions, je mets mon savoir-faire à votre service pour réaliser des projets qui allient la robustesse de l'acier à l'élégance du design. Chaque projet est une nouvelle aventure, une collaboration pour donner vie à vos idées.
-          </p>
+          <div 
+             className="text-muted-foreground text-base leading-relaxed space-y-4"
+             dangerouslySetInnerHTML={{ __html: story.replace(/\n/g, '<br />') }}
+          />
         </div>
       </div>
 

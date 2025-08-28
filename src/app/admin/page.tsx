@@ -47,7 +47,8 @@ const heroSchema = z.object({
 type HeroFormValues = z.infer<typeof heroSchema>;
 
 const aboutSchema = z.object({
-    image: z.instanceof(FileList).refine(files => files.length > 0, 'Une image est requise.'),
+    image: z.instanceof(FileList).optional(),
+    story: z.string().optional(),
 });
 type AboutFormValues = z.infer<typeof aboutSchema>;
 
@@ -60,6 +61,7 @@ export default function AdminPage() {
   const [aboutLoading, setAboutLoading] = useState(false);
   const [currentHero, setCurrentHero] = useState<{url: string, type: string} | null>(null);
   const [currentAboutImage, setCurrentAboutImage] = useState<string | null>(null);
+  const [currentStory, setCurrentStory] = useState<string>('');
 
   const { toast } = useToast();
 
@@ -83,6 +85,7 @@ export default function AdminPage() {
 
   const aboutForm = useForm<AboutFormValues>({
     resolver: zodResolver(aboutSchema),
+    defaultValues: { story: '' }
   });
 
   const fetchProjects = async () => {
@@ -95,15 +98,18 @@ export default function AdminPage() {
   
    const fetchSiteConfig = async () => {
     const heroDocRef = doc(db, 'site_config', 'hero');
-    const docSnap = await getDoc(heroDocRef);
-    if (docSnap.exists()) {
-      setCurrentHero(docSnap.data() as {url: string, type: string});
+    const heroSnap = await getDoc(heroDocRef);
+    if (heroSnap.exists()) {
+      setCurrentHero(heroSnap.data() as {url: string, type: string});
     }
 
     const aboutDocRef = doc(db, 'site_config', 'about');
     const aboutSnap = await getDoc(aboutDocRef);
     if (aboutSnap.exists()) {
-      setCurrentAboutImage(aboutSnap.data().imageUrl);
+      const aboutData = aboutSnap.data();
+      setCurrentAboutImage(aboutData.imageUrl);
+      setCurrentStory(aboutData.story || '');
+      aboutForm.reset({ story: aboutData.story || '' });
     }
   };
 
@@ -212,28 +218,38 @@ const onHeroSubmit = async (data: HeroFormValues) => {
 const onAboutSubmit = async (data: AboutFormValues) => {
     setAboutLoading(true);
     try {
-        const file = data.image[0];
-        const storageRef = ref(storage, `about/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(storageRef, file);
-        const url = await getDownloadURL(snapshot.ref);
+        const aboutDocRef = doc(db, 'site_config', 'about');
+        const updateData: { story?: string; imageUrl?: string } = {};
 
-        if(currentAboutImage) {
-             try {
-                const oldImageRef = ref(storage, currentAboutImage);
-                await deleteObject(oldImageRef);
-            } catch (imgError) {
-                console.warn("L'ancienne image n'a pas pu être supprimée.", imgError)
+        if (data.story !== currentStory) {
+            updateData.story = data.story;
+        }
+
+        if (data.image && data.image.length > 0) {
+            const file = data.image[0];
+            const storageRef = ref(storage, `about/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            updateData.imageUrl = await getDownloadURL(snapshot.ref);
+
+            if (currentAboutImage) {
+                try {
+                    const oldImageRef = ref(storage, currentAboutImage);
+                    await deleteObject(oldImageRef);
+                } catch (imgError) {
+                    console.warn("L'ancienne image n'a pas pu être supprimée.", imgError);
+                }
             }
         }
         
-        await setDoc(doc(db, 'site_config', 'about'), { imageUrl: url });
-
-        toast({ title: 'Image de la page "À Propos" mise à jour !' });
-        fetchSiteConfig();
-        aboutForm.reset();
+        if (Object.keys(updateData).length > 0) {
+             await setDoc(aboutDocRef, updateData, { merge: true });
+             toast({ title: 'Page "À Propos" mise à jour !' });
+             fetchSiteConfig();
+             aboutForm.setValue('image', undefined);
+        }
 
     } catch(error) {
-        console.error('Error updating about image: ', error);
+        console.error('Error updating about data: ', error);
         toast({ variant: 'destructive', title: 'Erreur', description: "Une erreur est survenue." });
     }
     setAboutLoading(false);
@@ -309,36 +325,54 @@ const onAboutSubmit = async (data: AboutFormValues) => {
         <Card className="mb-12">
             <CardHeader>
                 <CardTitle>Gestion de la page "À Propos"</CardTitle>
-                <CardDescription>Mettez à jour la photo de l'artisan.</CardDescription>
+                <CardDescription>Mettez à jour la photo et l'histoire de l'artisan.</CardDescription>
             </CardHeader>
             <CardContent>
-                 <div className="mb-6">
-                    <h3 className="font-medium mb-2">Photo actuelle</h3>
-                    {currentAboutImage ? (
-                        <div className="relative w-64 h-80">
-                           <Image src={currentAboutImage} alt="Portrait de l'artisan" fill className="object-cover rounded-md" />
-                        </div>
-                    ) : <p className="text-muted-foreground text-sm">Aucune photo configurée.</p>}
-                </div>
                  <Form {...aboutForm}>
-                    <form onSubmit={aboutForm.handleSubmit(onAboutSubmit)} className="space-y-4">
-                        <FormField
-                            control={aboutForm.control}
-                            name="image"
-                            render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Nouvelle photo</FormLabel>
-                                <FormControl>
-                                  <Input type="file" accept="image/*" {...aboutForm.register('image')} />
-                                </FormControl>
-                                <FormDescription>La nouvelle photo remplacera l'actuelle.</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                            )}
-                        />
+                    <form onSubmit={aboutForm.handleSubmit(onAboutSubmit)} className="space-y-8">
+                         <div className="space-y-4">
+                            <h3 className="font-medium mb-2">Photo de l'artisan</h3>
+                            {currentAboutImage ? (
+                                <div className="relative w-64 h-80">
+                                   <Image src={currentAboutImage} alt="Portrait de l'artisan" fill className="object-cover rounded-md" />
+                                </div>
+                            ) : <p className="text-muted-foreground text-sm">Aucune photo configurée.</p>}
+                            <FormField
+                                control={aboutForm.control}
+                                name="image"
+                                render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Changer la photo</FormLabel>
+                                    <FormControl>
+                                      <Input type="file" accept="image/*" {...aboutForm.register('image')} />
+                                    </FormControl>
+                                    <FormDescription>Laissez vide pour conserver la photo actuelle.</FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                            />
+                        </div>
+                        
+                        <div className="space-y-2">
+                             <h3 className="font-medium">Histoire de l'artisan</h3>
+                             <FormField
+                                control={aboutForm.control}
+                                name="story"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Texte de "Mon Histoire"</FormLabel>
+                                        <FormControl>
+                                            <Textarea {...field} rows={8} placeholder="Racontez votre parcours..." />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                                />
+                        </div>
+
                         <Button type="submit" disabled={aboutLoading}>
                             {aboutLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Mettre à jour la photo
+                            Mettre à jour la page "À Propos"
                         </Button>
                     </form>
                 </Form>
