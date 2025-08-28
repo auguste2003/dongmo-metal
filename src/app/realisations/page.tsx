@@ -7,7 +7,25 @@ import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { categories } from "@/lib/data";
 import Gallery from "./gallery";
 import type { Project } from "@/lib/data";
-import { Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+
+const SkeletonCard = () => (
+    <Card className="overflow-hidden shadow-lg flex flex-col">
+      <CardHeader className="p-0">
+          <Skeleton className="aspect-video w-full" />
+      </CardHeader>
+      <CardContent className="p-6 flex-grow flex flex-col">
+        <Skeleton className="h-6 w-3/4 mb-2" />
+        <Skeleton className="h-4 w-full mb-4" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="mt-6">
+            <Skeleton className="h-10 w-full" />
+        </div>
+      </CardContent>
+    </Card>
+);
+
 
 export default function RealisationsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -36,8 +54,8 @@ export default function RealisationsPage() {
         </p>
       </div>
       {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, i) => <SkeletonCard key={i} />)}
         </div>
       ) : (
         <Gallery allProjects={projects} categories={categories} />
