@@ -5,7 +5,7 @@ export function Logo() {
   return (
     <div className="flex items-center gap-2" style={{ width: 'max-content' }}>
         <Image 
-          src="/logo.png" 
+          src="/logo_.png" 
           alt="DONGMO METAL CONCEPTION Logo" 
           width={40} 
           height={40}
