@@ -5,45 +5,71 @@ import { WhatsAppButton } from "@/components/whatsapp-button";
 import { navLinks } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query } from "firebase/firestore";
+import { collection, getDocs, query, doc, getDoc } from "firebase/firestore";
 import type { Project } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 
 async function getRandomProjects() {
-  const projectsCol = collection(db, 'projects');
   const querySnapshot = await getDocs(query(collection(db, "projects")));
   const projects: Project[] = [];
   querySnapshot.forEach((doc) => {
       projects.push({ id: doc.id, ...doc.data() } as Project);
   });
 
-  // Mélanger le tableau pour l'aléatoire
   for (let i = projects.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [projects[i], projects[j]] = [projects[j], projects[i]];
   }
 
-  // Retourner les 3 premiers
   return projects.slice(0, 3);
+}
+
+async function getHeroMedia() {
+    try {
+        const heroDocRef = doc(db, 'site_config', 'hero');
+        const docSnap = await getDoc(heroDocRef);
+        if (docSnap.exists()) {
+            return docSnap.data() as {url: string, type: 'image' | 'video'};
+        }
+        return null;
+    } catch (error) {
+        console.error("Error fetching hero media:", error);
+        return null;
+    }
 }
 
 
 export default async function Home() {
   const featuredProjects = await getRandomProjects();
+  const heroMedia = await getHeroMedia();
+
+  const defaultHeroImage = "https://picsum.photos/1600/900";
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative h-[60vh] md:h-[70vh] w-full flex items-center justify-center text-center text-white">
-        <Image
-          src="https://picsum.photos/1600/900"
-          alt="Portail en acier moderne"
-          data-ai-hint="modern steel gate"
-          fill
-          className="object-cover brightness-50"
-          priority
-        />
+         {heroMedia?.type === 'video' ? (
+              <video 
+                key={heroMedia.url}
+                src={heroMedia.url} 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="absolute w-full h-full object-cover brightness-50"
+              />
+          ) : (
+              <Image
+                src={heroMedia?.url || defaultHeroImage}
+                alt="Portail en acier moderne"
+                data-ai-hint="modern steel gate"
+                fill
+                className="object-cover brightness-50"
+                priority
+              />
+          )}
         <div className="relative z-10 p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold font-headline tracking-tight">
             Le métal au service de vos idées
@@ -68,7 +94,8 @@ export default async function Home() {
               {featuredProjects.map((project, index) => (
                   <Card key={project.id} className={cn(
                       "overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex-col",
-                      index === 2 ? "hidden lg:flex" : "flex"
+                      index === 1 ? "hidden sm:flex" : "flex",
+                      index === 2 ? "hidden lg:flex" : ""
                     )}>
                   <CardHeader className="p-0">
                       <div className="relative aspect-[4/3]">

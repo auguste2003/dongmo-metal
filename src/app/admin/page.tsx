@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { db, storage } from '@/lib/firebase';
-import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc, getDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 
 import { Button } from '@/components/ui/button';
@@ -35,18 +35,25 @@ const projectSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
 
-// Schéma pour la modification, où l'image est optionnelle
 const editProjectSchema = projectSchema.extend({
   id: z.string(),
-  imageUrl: z.string().optional(), // Garder l'ancienne URL si pas de nouvelle image
+  imageUrl: z.string().optional(),
 });
 type EditProjectFormValues = z.infer<typeof editProjectSchema>;
+
+const heroSchema = z.object({
+    media: z.instanceof(FileList).refine(files => files.length > 0, 'Un fichier est requis.'),
+});
+type HeroFormValues = z.infer<typeof heroSchema>;
 
 
 export default function AdminPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
+  const [heroLoading, setHeroLoading] = useState(false);
+  const [currentHero, setCurrentHero] = useState<{url: string, type: string} | null>(null);
+
   const { toast } = useToast();
 
   const form = useForm<ProjectFormValues>({
@@ -63,6 +70,9 @@ export default function AdminPage() {
     resolver: zodResolver(editProjectSchema),
   });
 
+  const heroForm = useForm<HeroFormValues>({
+      resolver: zodResolver(heroSchema)
+  });
 
   const fetchProjects = async () => {
     setIsFetching(true);
@@ -71,9 +81,18 @@ export default function AdminPage() {
     setProjects(projectsData);
     setIsFetching(false);
   };
+  
+   const fetchHero = async () => {
+    const heroDocRef = doc(db, 'site_config', 'hero');
+    const docSnap = await getDoc(heroDocRef);
+    if (docSnap.exists()) {
+      setCurrentHero(docSnap.data() as {url: string, type: string});
+    }
+  };
 
   useEffect(() => {
     fetchProjects();
+    fetchHero();
   }, []);
 
   const onSubmit = async (data: ProjectFormValues) => {
@@ -94,7 +113,7 @@ export default function AdminPage() {
       await addDoc(collection(db, 'projects'), {
         ...data,
         imageUrl,
-        image: null, // Ne pas stocker l'objet FileList
+        image: null,
       });
 
       toast({ title: 'Projet ajouté !', description: 'La réalisation a été ajoutée avec succès.' });
@@ -113,13 +132,11 @@ export default function AdminPage() {
         const projectRef = doc(db, 'projects', data.id);
         let imageUrl = data.imageUrl;
 
-        // Si une nouvelle image est fournie, la téléverser
         if (data.image && data.image.length > 0) {
             const file = data.image[0];
             const storageRef = ref(storage, `projects/${Date.now()}_${file.name}`);
             const snapshot = await uploadBytes(storageRef, file);
             imageUrl = await getDownloadURL(snapshot.ref);
-             // Supprimer l'ancienne image si elle existe
             if (data.imageUrl) {
                 try {
                     const oldImageRef = ref(storage, data.imageUrl);
@@ -138,12 +155,41 @@ export default function AdminPage() {
 
         toast({ title: 'Projet modifié !', description: 'La réalisation a été mise à jour avec succès.' });
         fetchProjects();
-        // Fermer le dialogue de modification ici si possible
     } catch (error) {
         console.error('Error updating document: ', error);
         toast({ variant: 'destructive', title: 'Erreur', description: "Une erreur est survenue." });
     }
     setLoading(false);
+};
+
+const onHeroSubmit = async (data: HeroFormValues) => {
+    setHeroLoading(true);
+    try {
+        const file = data.media[0];
+        const mediaType = file.type.startsWith('video') ? 'video' : 'image';
+        const storageRef = ref(storage, `hero/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(snapshot.ref);
+
+        if(currentHero?.url) {
+            try {
+                const oldMediaRef = ref(storage, currentHero.url);
+                await deleteObject(oldMediaRef);
+            } catch (imgError) {
+                console.warn("L'ancien média n'a pas pu être supprimé.", imgError)
+            }
+        }
+
+        await setDoc(doc(db, 'site_config', 'hero'), { url, type: mediaType });
+        
+        toast({ title: 'Média de la page d\'accueil mis à jour !' });
+        fetchHero();
+        heroForm.reset();
+    } catch(error) {
+        console.error('Error updating hero media: ', error);
+        toast({ variant: 'destructive', title: 'Erreur', description: "Une erreur est survenue." });
+    }
+    setHeroLoading(false);
 };
 
 
@@ -170,6 +216,49 @@ export default function AdminPage() {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-6">
       <div className="container mx-auto px-4 md:px-6 py-12">
+        <Card className="mb-12">
+            <CardHeader>
+                <CardTitle>Gestion de la page d'accueil</CardTitle>
+                <CardDescription>Mettez à jour l'image ou la vidéo de la section principale.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="mb-6">
+                    <h3 className="font-medium mb-2">Média actuel</h3>
+                    {currentHero ? (
+                        currentHero.type === 'image' ? (
+                             <div className="relative w-full max-w-md aspect-video">
+                                <Image src={currentHero.url} alt="Hero image" fill className="object-cover rounded-md" />
+                            </div>
+                        ) : (
+                            <video src={currentHero.url} controls className="w-full max-w-md rounded-md" />
+                        )
+                    ) : <p className="text-muted-foreground text-sm">Aucun média configuré.</p>}
+                </div>
+                 <Form {...heroForm}>
+                    <form onSubmit={heroForm.handleSubmit(onHeroSubmit)} className="space-y-4">
+                        <FormField
+                            control={heroForm.control}
+                            name="media"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nouveau média (Image ou Vidéo)</FormLabel>
+                                <FormControl>
+                                <Input type="file" accept="image/*,video/*" {...heroForm.register('media')} />
+                                </FormControl>
+                                <FormDescription>Le nouveau média remplacera l'actuel.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <Button type="submit" disabled={heroLoading}>
+                            {heroLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Mettre à jour
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+
         <Card className="mb-12">
           <CardHeader>
             <CardTitle>Ajouter un nouveau projet</CardTitle>
@@ -379,5 +468,3 @@ export default function AdminPage() {
     </main>
   );
 }
-
-    
