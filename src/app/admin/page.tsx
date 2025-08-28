@@ -46,13 +46,20 @@ const heroSchema = z.object({
 });
 type HeroFormValues = z.infer<typeof heroSchema>;
 
+const aboutSchema = z.object({
+    image: z.instanceof(FileList).refine(files => files.length > 0, 'Une image est requise.'),
+});
+type AboutFormValues = z.infer<typeof aboutSchema>;
+
 
 export default function AdminPage() {
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [heroLoading, setHeroLoading] = useState(false);
+  const [aboutLoading, setAboutLoading] = useState(false);
   const [currentHero, setCurrentHero] = useState<{url: string, type: string} | null>(null);
+  const [currentAboutImage, setCurrentAboutImage] = useState<string | null>(null);
 
   const { toast } = useToast();
 
@@ -74,6 +81,10 @@ export default function AdminPage() {
       resolver: zodResolver(heroSchema)
   });
 
+  const aboutForm = useForm<AboutFormValues>({
+    resolver: zodResolver(aboutSchema),
+  });
+
   const fetchProjects = async () => {
     setIsFetching(true);
     const querySnapshot = await getDocs(collection(db, 'projects'));
@@ -82,17 +93,23 @@ export default function AdminPage() {
     setIsFetching(false);
   };
   
-   const fetchHero = async () => {
+   const fetchSiteConfig = async () => {
     const heroDocRef = doc(db, 'site_config', 'hero');
     const docSnap = await getDoc(heroDocRef);
     if (docSnap.exists()) {
       setCurrentHero(docSnap.data() as {url: string, type: string});
     }
+
+    const aboutDocRef = doc(db, 'site_config', 'about');
+    const aboutSnap = await getDoc(aboutDocRef);
+    if (aboutSnap.exists()) {
+      setCurrentAboutImage(aboutSnap.data().imageUrl);
+    }
   };
 
   useEffect(() => {
     fetchProjects();
-    fetchHero();
+    fetchSiteConfig();
   }, []);
 
   const onSubmit = async (data: ProjectFormValues) => {
@@ -183,13 +200,43 @@ const onHeroSubmit = async (data: HeroFormValues) => {
         await setDoc(doc(db, 'site_config', 'hero'), { url, type: mediaType });
         
         toast({ title: 'Média de la page d\'accueil mis à jour !' });
-        fetchHero();
+        fetchSiteConfig();
         heroForm.reset();
     } catch(error) {
         console.error('Error updating hero media: ', error);
         toast({ variant: 'destructive', title: 'Erreur', description: "Une erreur est survenue." });
     }
     setHeroLoading(false);
+};
+
+const onAboutSubmit = async (data: AboutFormValues) => {
+    setAboutLoading(true);
+    try {
+        const file = data.image[0];
+        const storageRef = ref(storage, `about/${Date.now()}_${file.name}`);
+        const snapshot = await uploadBytes(storageRef, file);
+        const url = await getDownloadURL(snapshot.ref);
+
+        if(currentAboutImage) {
+             try {
+                const oldImageRef = ref(storage, currentAboutImage);
+                await deleteObject(oldImageRef);
+            } catch (imgError) {
+                console.warn("L'ancienne image n'a pas pu être supprimée.", imgError)
+            }
+        }
+        
+        await setDoc(doc(db, 'site_config', 'about'), { imageUrl: url });
+
+        toast({ title: 'Image de la page "À Propos" mise à jour !' });
+        fetchSiteConfig();
+        aboutForm.reset();
+
+    } catch(error) {
+        console.error('Error updating about image: ', error);
+        toast({ variant: 'destructive', title: 'Erreur', description: "Une erreur est survenue." });
+    }
+    setAboutLoading(false);
 };
 
 
@@ -252,7 +299,46 @@ const onHeroSubmit = async (data: HeroFormValues) => {
                         />
                         <Button type="submit" disabled={heroLoading}>
                             {heroLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Mettre à jour
+                            Mettre à jour le média d'accueil
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+
+        <Card className="mb-12">
+            <CardHeader>
+                <CardTitle>Gestion de la page "À Propos"</CardTitle>
+                <CardDescription>Mettez à jour la photo de l'artisan.</CardDescription>
+            </CardHeader>
+            <CardContent>
+                 <div className="mb-6">
+                    <h3 className="font-medium mb-2">Photo actuelle</h3>
+                    {currentAboutImage ? (
+                        <div className="relative w-64 h-80">
+                           <Image src={currentAboutImage} alt="Portrait de l'artisan" fill className="object-cover rounded-md" />
+                        </div>
+                    ) : <p className="text-muted-foreground text-sm">Aucune photo configurée.</p>}
+                </div>
+                 <Form {...aboutForm}>
+                    <form onSubmit={aboutForm.handleSubmit(onAboutSubmit)} className="space-y-4">
+                        <FormField
+                            control={aboutForm.control}
+                            name="image"
+                            render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Nouvelle photo</FormLabel>
+                                <FormControl>
+                                  <Input type="file" accept="image/*" {...aboutForm.register('image')} />
+                                </FormControl>
+                                <FormDescription>La nouvelle photo remplacera l'actuelle.</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                            )}
+                        />
+                        <Button type="submit" disabled={aboutLoading}>
+                            {aboutLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            Mettre à jour la photo
                         </Button>
                     </form>
                 </Form>

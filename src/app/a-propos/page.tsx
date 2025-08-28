@@ -3,13 +3,32 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { values, testimonials } from "@/lib/data";
 import type { Metadata } from 'next';
+import { db } from "@/lib/firebase";
+import { doc, getDoc } from "firebase/firestore";
 
 export const metadata: Metadata = {
   title: 'À Propos - Metal Expressions',
   description: 'Découvrez l\'artisan derrière Metal Expressions, sa passion pour le métal et ses valeurs: solidité, élégance, fiabilité.',
 };
 
-export default function AboutPage() {
+async function getAboutImage() {
+  try {
+    const aboutDocRef = doc(db, "site_config", "about");
+    const docSnap = await getDoc(aboutDocRef);
+    if (docSnap.exists()) {
+      return docSnap.data().imageUrl as string;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching about image:", error);
+    return null;
+  }
+}
+
+export default async function AboutPage() {
+  const imageUrl = await getAboutImage();
+  const defaultImage = "https://picsum.photos/450/600";
+
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
       <div className="text-center mb-12">
@@ -22,14 +41,14 @@ export default function AboutPage() {
       <div className="grid md:grid-cols-5 gap-8 md:gap-12 items-center">
         <div className="md:col-span-2">
           <Card className="overflow-hidden shadow-xl">
-            <div className="aspect-w-3 aspect-h-4">
+            <div className="relative w-full aspect-[3/4]">
               <Image
-                src="https://picsum.photos/450/600"
+                src={imageUrl || defaultImage}
                 alt="Portrait de l'artisan soudeur"
                 data-ai-hint="welder portrait"
-                width={450}
-                height={600}
+                fill
                 className="object-cover"
+                priority
               />
             </div>
           </Card>
