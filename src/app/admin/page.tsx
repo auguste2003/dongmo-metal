@@ -22,6 +22,9 @@ import { Loader2, Trash2, Edit } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 
+// Check if we are on the client side
+const isBrowser = typeof window !== 'undefined';
+
 const projectSchema = z.object({
   title: z.string().min(1, 'Le titre est requis.'),
   description: z.string().optional(),
@@ -30,7 +33,7 @@ const projectSchema = z.object({
   }),
   year: z.coerce.number().optional(),
   location: z.string().optional(),
-  image: z.instanceof(FileList).optional(),
+  image: isBrowser ? z.instanceof(FileList).optional() : z.any(),
 });
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
@@ -42,12 +45,12 @@ const editProjectSchema = projectSchema.extend({
 type EditProjectFormValues = z.infer<typeof editProjectSchema>;
 
 const heroSchema = z.object({
-    media: z.instanceof(FileList).refine(files => files.length > 0, 'Un fichier est requis.'),
+    media: isBrowser ? z.instanceof(FileList).refine(files => files.length > 0, 'Un fichier est requis.') : z.any(),
 });
 type HeroFormValues = z.infer<typeof heroSchema>;
 
 const aboutSchema = z.object({
-    image: z.instanceof(FileList).optional(),
+    image: isBrowser ? z.instanceof(FileList).optional() : z.any(),
     story: z.string().optional(),
 });
 type AboutFormValues = z.infer<typeof aboutSchema>;
@@ -588,3 +591,5 @@ const onAboutSubmit = async (data: AboutFormValues) => {
     </main>
   );
 }
+
+    
