@@ -10,7 +10,8 @@ const firebaseConfig = {
   apiKey: "AIzaSyBMBZuNkoF57EfPNo1DlOmZ1mtiKtd7EQs",
   authDomain: "metal-expressions.firebaseapp.com",
   measurementId: "",
-  messagingSenderId: "207635817802"
+  messagingSenderId: "207635817802",
+  mapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
@@ -19,4 +20,4 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
 
-export { app, auth, db, storage };
+export { app, auth, db, storage, firebaseConfig };

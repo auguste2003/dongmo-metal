@@ -1,9 +1,10 @@
-import Image from "next/image";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Phone, MessageCircle, Facebook, Instagram, Clock, MapPin } from 'lucide-react';
 import Link from "next/link";
 import type { Metadata } from 'next';
+import { Map } from "@/components/map";
 
 export const metadata: Metadata = {
   title: 'Contact - Metal Expressions',
@@ -84,15 +85,8 @@ export default function ContactPage() {
 
         <div>
             <Card className="overflow-hidden shadow-lg h-full">
-                <div className="aspect-w-4 aspect-h-3 h-full">
-                <Image 
-                    src="https://picsum.photos/800/600"
-                    alt="Carte de localisation de l'atelier"
-                    data-ai-hint="map location"
-                    width={800}
-                    height={600}
-                    className="object-cover w-full h-full"
-                />
+                <div className="aspect-w-4 aspect-h-3 h-full min-h-[400px]">
+                  <Map />
                 </div>
             </Card>
         </div>
