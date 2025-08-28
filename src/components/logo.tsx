@@ -1,8 +1,14 @@
+import Image from "next/image";
 
 export function Logo() {
   return (
-    <span className="text-2xl font-bold text-primary font-headline">
-        DONGMO METAL <span className="text-accent">CONCEPTION</span>
-    </span>
+    <Image 
+      src="/logo.png" 
+      alt="DONGMO METAL CONCEPTION Logo" 
+      width={250} 
+      height={40}
+      priority 
+      className="h-10 w-auto"
+    />
   );
 }
