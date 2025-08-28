@@ -4,20 +4,21 @@ import { Button } from "@/components/ui/button";
 import { Phone, MessageCircle, Facebook, Instagram, Clock, MapPin } from 'lucide-react';
 import Link from "next/link";
 import type { Metadata } from 'next';
+import { siteConfig } from "@/lib/data";
 
 export const metadata: Metadata = {
-  title: 'Contact - DONGMO METAL CONCEPTION',
+  title: `Contact - ${siteConfig.name}`,
   description: 'Contactez-nous pour vos projets de ferronnerie. Retrouvez nos horaires, notre adresse et nos contacts directs via WhatsApp, téléphone et réseaux sociaux.',
 };
 
-const phoneNumber = "237612345678";
+const phoneNumber = "+237678502271";
 const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Bonjour, j'ai une question concernant vos services.")}`;
 const phoneLink = `tel:${phoneNumber}`;
 const facebookLink = "#";
 const instagramLink = "#";
 
 export default function ContactPage() {
-  const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127347.33230681554!2d9.66591205128362!3d4.048388879007798!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x10610d4e3345156d%3A0xfa938e5a5933a34!2sDouala%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1688568750132!5m2!1sen!2sus";
+  const mapEmbedUrl = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15923.36430399858!2d11.45532585!3d3.8711019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x108bcf13b827366b%3A0x8f23789b708e33d3!2sNkolbisson%2C%20Yaound%C3%A9%2C%20Cameroon!5e0!3m2!1sen!2sus!4v1724965839088!5m2!1sen!2sus";
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
@@ -78,7 +79,7 @@ export default function ContactPage() {
                   <MapPin className="text-accent" />
                   Adresse de l'atelier
                 </h3>
-                <p className="text-muted-foreground">Rue 123, Quartier B, Douala, Cameroun</p>
+                <p className="text-muted-foreground">Nkolbisson-Béaltitude, Yaoundé, Cameroun</p>
               </div>
             </CardContent>
           </Card>

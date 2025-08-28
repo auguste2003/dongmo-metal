@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Contactez-nous pour vos projets de ferronnerie. Retrouvez nos horaires, notre adresse et nos contacts directs via WhatsApp, téléphone et réseaux sociaux.',
 };
 
-const phoneNumber = "237612345678";
+const phoneNumber = "+237678502271";
 const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Bonjour, j'ai une question concernant vos services.")}`;
 const phoneLink = `tel:${phoneNumber}`;
 const facebookLink = "#";
@@ -67,8 +67,8 @@ export default function ContactPage() {
                   Horaires d'ouverture
                 </h3>
                 <ul className="space-y-1 text-muted-foreground">
-                  <li>Lundi - Vendredi : 08h00 - 18h00</li>
-                  <li>Samedi : 09h00 - 14h00</li>
+                  <li>Lundi - Vendredi : 06h00 - 20h00</li>
+                  <li>Samedi : 09h00 - 20h00</li>
                   <li>Dimanche : Fermé</li>
                 </ul>
               </div>
@@ -78,7 +78,7 @@ export default function ContactPage() {
                   <MapPin className="text-accent" />
                   Adresse de l'atelier
                 </h3>
-                <p className="text-muted-foreground">Rue 123, Quartier B, Douala, Cameroun</p>
+                <p className="text-muted-foreground">Nkolbisson-Béaltitude, Yaounde, Cameroun</p>
               </div>
             </CardContent>
           </Card>
