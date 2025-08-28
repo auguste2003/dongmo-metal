@@ -7,7 +7,7 @@ const firebaseConfig = {
   projectId: "metal-expressions",
   appId: "1:207635817802:web:00153b219cb276d4278db3",
   storageBucket: "metal-expressions.firebasestorage.app",
-  apiKey: "AIzaSyBMBZuNkoF57EfPNo1DlOmZ1mtiKtd7EQs",
+  apiKey: "",
   authDomain: "metal-expressions.firebaseapp.com",
   measurementId: "",
   messagingSenderId: "207635817802"
