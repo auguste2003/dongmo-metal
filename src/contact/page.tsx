@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   description: 'Contactez-nous pour vos projets de ferronnerie. Retrouvez nos horaires, notre adresse et nos contacts directs via WhatsApp, téléphone et réseaux sociaux.',
 };
 
-const phoneNumber = "+237678502271";
+const phoneNumber = "+237697266183";
 const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Bonjour, j'ai une question concernant vos services.")}`;
 const phoneLink = `tel:${phoneNumber}`;
 const facebookLink = "#";
