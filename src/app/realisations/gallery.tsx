@@ -80,7 +80,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
                 Année: {project.year} | Lieu: {project.location}
               </p>
               <div className="mt-6">
-                <WhatsAppButton message={`Bonjour, je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
+                <WhatsAppButton message={`Bonjour, je viens de visiter votre site et je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
                   Demander un devis
                 </WhatsAppButton>
               </div>

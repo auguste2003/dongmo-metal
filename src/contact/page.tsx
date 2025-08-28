@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const phoneNumber = "+237697266183";
-const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Bonjour, j'ai une question concernant vos services.")}`;
+const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodeURIComponent("Bonjour,je viens de visiter votre site et j'ai une question concernant vos services.")}`;
 const phoneLink = `tel:${phoneNumber}`;
 const facebookLink = "#";
 const instagramLink = "#";

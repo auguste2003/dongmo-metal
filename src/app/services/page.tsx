@@ -39,7 +39,7 @@ export default function ServicesPage() {
       <div className="text-center mt-16">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">Un projet en tête ?</h2>
         <p className="text-muted-foreground text-lg mb-6">Contactez-moi pour en discuter et obtenir un devis gratuit.</p>
-        <WhatsAppButton message="Bonjour, j'aimerais discuter d'un projet sur mesure.">
+        <WhatsAppButton message="Bonjour, je viens de visiter votre site et j'ai besoin de vos service.">
           Lancer la conversation
         </WhatsAppButton>
       </div>
