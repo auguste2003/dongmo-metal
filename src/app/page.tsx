@@ -5,25 +5,10 @@ import { WhatsAppButton } from "@/components/whatsapp-button";
 import { navLinks } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
 import { db } from "@/lib/firebase";
-import { collection, getDocs, query, doc, getDoc } from "firebase/firestore";
-import type { Project } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { doc, getDoc } from "firebase/firestore";
+import { Suspense } from "react";
+import { FeaturedProjects, FeaturedProjectsSkeleton } from "@/components/featured-projects";
 
-
-async function getRandomProjects() {
-  const querySnapshot = await getDocs(query(collection(db, "projects")));
-  const projects: Project[] = [];
-  querySnapshot.forEach((doc) => {
-      projects.push({ id: doc.id, ...doc.data() } as Project);
-  });
-
-  for (let i = projects.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [projects[i], projects[j]] = [projects[j], projects[i]];
-  }
-
-  return projects.slice(0, 3);
-}
 
 async function getHeroMedia() {
     try {
@@ -41,10 +26,10 @@ async function getHeroMedia() {
 
 
 export default async function Home() {
-  const featuredProjects = await getRandomProjects();
   const heroMedia = await getHeroMedia();
 
   const defaultHeroImage = "https://picsum.photos/1600/900";
+  const defaultHeroVideo = "https://videos.pexels.com/video-files/3845831/3845831-hd_1920_1080_25fps.mp4";
 
   return (
     <div className="flex flex-col">
@@ -60,14 +45,24 @@ export default async function Home() {
                 playsInline
                 className="absolute w-full h-full object-cover brightness-50"
               />
-          ) : (
+          ) : heroMedia?.type === 'image' ? (
               <Image
-                src={heroMedia?.url || defaultHeroImage}
+                src={heroMedia.url}
                 alt="Portail en acier moderne"
                 data-ai-hint="modern steel gate"
                 fill
                 className="object-cover brightness-50"
                 priority
+              />
+          ) : (
+             <video 
+                key={defaultHeroVideo}
+                src={defaultHeroVideo} 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="absolute w-full h-full object-cover brightness-50"
               />
           )}
         <div className="relative z-10 p-4">
@@ -86,43 +81,14 @@ export default async function Home() {
       </section>
 
       {/* Featured Projects Section */}
-      {featuredProjects.length > 0 && (
         <section id="featured" className="py-12 md:py-20 bg-background">
           <div className="container mx-auto px-4 md:px-6">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Nos Réalisations à la Une</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {featuredProjects.map((project, index) => (
-                  <Card key={project.id} className={cn(
-                      "overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex-col",
-                      index === 1 ? "hidden sm:flex" : "flex",
-                      index === 2 ? "hidden lg:flex" : ""
-                    )}>
-                  <CardHeader className="p-0">
-                      <div className="relative aspect-[4/3]">
-                      <Image
-                          src={project.imageUrl}
-                          alt={project.title}
-                          data-ai-hint={project.imageHint || 'metal work'}
-                          fill
-                          className="object-cover"
-                      />
-                      </div>
-                  </CardHeader>
-                  <CardContent className="p-4 md:p-6 flex-grow flex flex-col">
-                      <CardTitle className="text-xl font-bold mb-2">{project.title}</CardTitle>
-                      <CardDescription className="text-muted-foreground flex-grow">{project.description}</CardDescription>
-                      <div className="mt-4">
-                      <WhatsAppButton size="sm" className="w-full" message={`Bonjour, je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
-                          Discutons-en
-                      </WhatsAppButton>
-                      </div>
-                  </CardContent>
-                  </Card>
-              ))}
-            </div>
+            <Suspense fallback={<FeaturedProjectsSkeleton />}>
+                <FeaturedProjects />
+            </Suspense>
           </div>
         </section>
-      )}
 
       {/* Navigation Cards Section */}
       <section id="navigation" className="py-12 md:py-20 bg-secondary/50">
