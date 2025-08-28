@@ -8,91 +8,11 @@ export interface Project {
   description: string;
   category: ProjectCategory;
   imageUrl: string;
-  imageHint: string;
-  featured: boolean;
-  year: number;
-  location: string;
+  imageHint?: string;
+  featured?: boolean;
+  year?: number;
+  location?: string;
 }
-
-export const projects: Project[] = [
-  {
-    id: 'p1',
-    title: 'Portail "Élégance"',
-    description: 'Un portail coulissant moderne avec des motifs découpés au laser.',
-    category: 'portails',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'modern steel gate',
-    featured: true,
-    year: 2023,
-    location: 'Douala',
-  },
-  {
-    id: 'b1',
-    title: 'Barrière de Sécurité "Rempart"',
-    description: 'Barrière robuste pour une protection optimale de votre propriété.',
-    category: 'barrieres',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'strong metal fence',
-    featured: true,
-    year: 2022,
-    location: 'Yaoundé',
-  },
-  {
-    id: 'r1',
-    title: 'Rampe d\'escalier "Volute"',
-    description: 'Design artistique et fluide pour un escalier intérieur.',
-    category: 'rampes',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'artistic railing',
-    featured: true,
-    year: 2023,
-    location: 'Bafoussam',
-  },
-  {
-    id: 'i1',
-    title: 'Verrière d\'atelier',
-    description: 'Installation d\'une verrière pour séparer les espaces avec style.',
-    category: 'installations',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'indoor glass partition',
-    featured: false,
-    year: 2023,
-    location: 'Yaoundé',
-  },
-  {
-    id: 'e1',
-    title: 'Sculpture "L\'Envol"',
-    description: 'Pièce maîtresse pour l\'exposition "Art en Fusion".',
-    category: 'expositions',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'metal sculpture',
-    featured: false,
-    year: 2021,
-    location: 'Douala',
-  },
-  {
-    id: 'p2',
-    title: 'Portail Battant "Tradition"',
-    description: 'Portail à deux battants avec des finitions en fer forgé.',
-    category: 'portails',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'classic wrought iron gate',
-    featured: false,
-    year: 2022,
-    location: 'Limbé',
-  },
-  {
-    id: 'b2',
-    title: 'Clôture de Jardin',
-    description: 'Clôture périmétrique alliant sécurité et esthétisme.',
-    category: 'barrieres',
-    imageUrl: 'https://picsum.photos/600/400',
-    imageHint: 'garden metal fence',
-    featured: false,
-    year: 2023,
-    location: 'Kribi',
-  },
-];
 
 export const categories: { key: ProjectCategory | 'tous'; label: string }[] = [
     { key: 'tous', label: 'Tous' },

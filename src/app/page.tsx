@@ -2,11 +2,31 @@ import Image from "next/image";
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { WhatsAppButton } from "@/components/whatsapp-button";
-import { projects, navLinks } from "@/lib/data";
+import { navLinks } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, query, where, limit } from "firebase/firestore";
+import type { Project } from "@/lib/data";
 
-export default function Home() {
-  const featuredProjects = projects.filter(p => p.featured);
+
+async function getFeaturedProjects() {
+  const projectsCol = collection(db, 'projects');
+  // Note: Firestore doesn't support complex queries like `featured == true && limit(3)` directly without composite indexes for more complex cases.
+  // For this simple case, we can fetch featured and limit on the client, or fetch all and filter.
+  // A better approach for larger datasets would be to have a separate 'featured' collection or fetch more and filter.
+  // For now, let's query for featured projects.
+  const q = query(collection(db, "projects"), where("featured", "==", true), limit(3));
+  const querySnapshot = await getDocs(q);
+  const projects: Project[] = [];
+  querySnapshot.forEach((doc) => {
+      projects.push({ id: doc.id, ...doc.data() } as Project);
+  });
+  return projects;
+}
+
+
+export default async function Home() {
+  const featuredProjects = await getFeaturedProjects();
 
   return (
     <div className="flex flex-col">
@@ -40,38 +60,14 @@ export default function Home() {
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-10">Nos Réalisations à la Une</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {featuredProjects.slice(0, 2).map((project) => (
-              <Card key={project.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col lg:hidden">
-                <CardHeader className="p-0">
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src={project.imageUrl}
-                      alt={project.title}
-                      data-ai-hint={project.imageHint}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent className="p-4 md:p-6 flex-grow flex flex-col">
-                  <CardTitle className="text-xl font-bold mb-2">{project.title}</CardTitle>
-                  <CardDescription className="text-muted-foreground flex-grow">{project.description}</CardDescription>
-                  <div className="mt-4">
-                    <WhatsAppButton size="sm" className="w-full" message={`Bonjour, je suis intéressé par votre projet "${project.title}". Pourriez-vous m'en dire plus ?`}>
-                      Discutons-en
-                    </WhatsAppButton>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-            {featuredProjects.slice(0, 3).map((project) => (
-                <Card key={project.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex-col hidden lg:flex">
+            {featuredProjects.map((project) => (
+                <Card key={project.id} className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
                 <CardHeader className="p-0">
                     <div className="relative aspect-[4/3]">
                     <Image
                         src={project.imageUrl}
                         alt={project.title}
-                        data-ai-hint={project.imageHint}
+                        data-ai-hint={project.imageHint || 'metal work'}
                         fill
                         className="object-cover"
                     />
