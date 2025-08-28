@@ -24,12 +24,11 @@ async function getRandomProjects() {
 
 export function FeaturedProjectsSkeleton() {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[...Array(3)].map((_, i) => (
                 <Card key={i} className={cn(
-                    "overflow-hidden shadow-lg flex-col",
-                    i === 1 ? "hidden sm:flex" : "flex",
-                    i === 2 ? "hidden lg:flex" : ""
+                    "overflow-hidden shadow-lg flex flex-col",
+                    i === 2 ? "hidden sm:hidden lg:flex" : "" // Hide 3rd card on sm and md
                 )}>
                     <CardHeader className="p-0">
                         <Skeleton className="aspect-[4/3] w-full" />
@@ -55,12 +54,11 @@ export async function FeaturedProjects() {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {featuredProjects.map((project, index) => (
                 <Card key={project.id} className={cn(
-                    "overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex-col",
-                    index === 1 ? "hidden sm:flex" : "flex",
-                    index === 2 ? "hidden lg:flex" : ""
+                    "overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col",
+                    index === 2 ? "hidden sm:hidden lg:flex" : "" // Hide 3rd card on sm and md
                 )}>
                     <CardHeader className="p-0">
                         <div className="relative aspect-[4/3]">
