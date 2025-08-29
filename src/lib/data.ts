@@ -49,7 +49,6 @@ export const services = [
     description: 'Découvrez nos pièces artistiques et nos créations prêtes à l\'emploi dans notre espace d\'exposition.',
   },
 ];
-
 export const values = [
     { icon: ShieldCheck, title: "Assurance", description: "Des ouvrages conçus pour durer, résistant au temps et aux intempéries." },
     { icon: Gem, title: "Élégance", description: "Un design soigné et des finitions impeccables pour valoriser votre propriété." },
