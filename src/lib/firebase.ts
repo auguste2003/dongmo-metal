@@ -4,13 +4,12 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  projectId: "metal-expressions",
-  appId: "1:207635817802:web:00153b219cb276d4278db3",
-  storageBucket: "metal-expressions.firebasestorage.app",
-  apiKey: "",
+  apiKey: "YOUR_API_KEY",
   authDomain: "metal-expressions.firebaseapp.com",
-  measurementId: "",
-  messagingSenderId: "207635817802"
+  projectId: "metal-expressions",
+  storageBucket: "metal-expressions.appspot.com",
+  messagingSenderId: "207635817802",
+  appId: "1:207635817802:web:00153b219cb276d4278db3"
 };
 
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
