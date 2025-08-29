@@ -51,7 +51,7 @@ export const services = [
 ];
 
 export const values = [
-    { icon: ShieldCheck, title: "Solidité", description: "Des ouvrages conçus pour durer, résistant au temps et aux intempéries." },
+    { icon: ShieldCheck, title: "Assurance", description: "Des ouvrages conçus pour durer, résistant au temps et aux intempéries." },
     { icon: Gem, title: "Élégance", description: "Un design soigné et des finitions impeccables pour valoriser votre propriété." },
     { icon: CheckCircle, title: "Fiabilité", description: "Respect des délais et un service client à votre écoute à chaque étape." },
 ];
