@@ -7,7 +7,7 @@ import { Footer } from '@/components/footer';
 import { siteConfig } from '@/lib/data';
 
 export const metadata: Metadata = {
-  title: `${siteConfig.name} - Le métal au service de vos idées`,
+  title: `${siteConfig.name} - concevoir le devoir`,
   description: 'Artisan soudeur au Cameroun. Créations sur mesure de portails, barrières, rampes et plus. Solidité, élégance, fiabilité.',
 };
 

@@ -67,7 +67,7 @@ export default async function Home() {
           )}
         <div className="relative z-10 p-4">
           <h1 className="text-4xl md:text-6xl font-extrabold font-headline tracking-tight">
-            Le métal au service de vos idées
+            concevoir le devoir
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-white/90">
             Artisan soudeur spécialisé dans la création sur mesure d'ouvrages métalliques.
