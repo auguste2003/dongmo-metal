@@ -31,7 +31,7 @@ const projectSchema = z.object({
   }),
   year: z.coerce.number().optional(),
   location: z.string().optional(),
-  image: z.any().optional(),
+  image: z.any().refine((files) => files?.length > 0, 'Une image est requise.'),
 });
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
@@ -39,11 +39,12 @@ type ProjectFormValues = z.infer<typeof projectSchema>;
 const editProjectSchema = projectSchema.extend({
   id: z.string(),
   imageUrl: z.string().optional(),
+  image: z.any().optional(),
 });
 type EditProjectFormValues = z.infer<typeof editProjectSchema>;
 
 const heroSchema = z.object({
-    media: z.any().refine((files): files is File[] => files?.length > 0, 'Un fichier est requis.'),
+    media: z.any().refine((files) => files?.length > 0, 'Un fichier est requis.'),
 });
 type HeroFormValues = z.infer<typeof heroSchema>;
 
@@ -172,7 +173,7 @@ export default function AdminPage() {
             }
         }
 
-        const { id, image, ...updateData } = data;
+        const { id: dataId, image: dataImage, ...updateData } = data;
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
@@ -304,7 +305,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                         <FormField
                             control={heroForm.control}
                             name="media"
-                            render={({ field }) => (
+                            render={() => (
                             <FormItem>
                                 <FormLabel>Nouveau média (Image ou Vidéo)</FormLabel>
                                 <FormControl>
@@ -342,7 +343,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                             <FormField
                                 control={aboutForm.control}
                                 name="image"
-                                render={({ field }) => (
+                                render={() => (
                                 <FormItem>
                                     <FormLabel>Changer la photo</FormLabel>
                                     <FormControl>
