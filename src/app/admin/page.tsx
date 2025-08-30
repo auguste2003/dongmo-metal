@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
@@ -173,7 +174,7 @@ export default function AdminPage() {
             }
         }
 
-        const { id, image, ...updateData } = data;
+        const { id: dataId, image: dataImage, ...updateData } = data;
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
