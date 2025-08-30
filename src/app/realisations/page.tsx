@@ -50,7 +50,7 @@ export default function RealisationsPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold font-headline">Nos Réalisations</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Explorez une sélection de nos travaux, classés par catégorie. Chaque pièce est le fruit d'un savoir-faire artisanal et d'une passion pour le métal.
+          Explorez une sélection de nos travaux, classés par catégorie. Chaque pièce est le fruit d&apos;un savoir-faire artisanal et d&apos;une passion pour le métal.
         </p>
       </div>
       {loading ? (

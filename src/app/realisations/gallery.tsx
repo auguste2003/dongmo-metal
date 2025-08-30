@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Hand, ZoomIn } from "lucide-react";
+import { ZoomIn } from "lucide-react";
 
 interface GalleryProps {
   allProjects: Project[];
@@ -69,7 +69,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
             <Alert className="shadow-md">
                 <ZoomIn className="h-4 w-4" />
                 <AlertDescription>
-                  Cliquez sur une image pour l'agrandir.
+                  Cliquez sur une image pour l&apos;agrandir.
                 </AlertDescription>
               </Alert>
            </div>

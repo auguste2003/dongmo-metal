@@ -14,7 +14,7 @@ export default function ServicesPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold font-headline">Ce que je propose</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          De la première esquisse à l'installation finale, je vous accompagne avec expertise et passion.
+          De la première esquisse à l&apos;installation finale, je vous accompagne avec expertise et passion.
         </p>
       </div>
 

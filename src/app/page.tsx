@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { navLinks } from "@/lib/data";
 import { ArrowRight } from "lucide-react";
@@ -28,7 +28,6 @@ async function getHeroMedia() {
 export default async function Home() {
   const heroMedia = await getHeroMedia();
 
-  const defaultHeroImage = "https://picsum.photos/1600/900";
   const defaultHeroVideo = "https://videos.pexels.com/video-files/3845831/3845831-hd_1920_1080_25fps.mp4";
 
   return (
@@ -70,7 +69,7 @@ export default async function Home() {
             concevoir le devoir
           </h1>
           <p className="mt-4 max-w-2xl mx-auto text-lg md:text-xl text-white/90">
-            Artisan soudeur spécialisé dans la création sur mesure d'ouvrages métalliques.
+            Artisan soudeur spécialisé dans la création sur mesure d&apos;ouvrages métalliques.
           </p>
           <div className="mt-8">
             <WhatsAppButton message="Bonjour, je suis intéressé par vos services et j'aimerais discuter de mon projet.">

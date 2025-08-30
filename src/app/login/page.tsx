@@ -40,7 +40,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm mx-auto">
         <CardHeader>
           <CardTitle>Connexion Administrateur</CardTitle>
-          <CardDescription>Veuillez entrer vos identifiants pour accéder au panneau d'administration.</CardDescription>
+          <CardDescription>Veuillez entrer vos identifiants pour accéder au panneau d&apos;administration.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">

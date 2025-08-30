@@ -1,4 +1,4 @@
-import { Sidebar, SidebarProvider, SidebarInset, SidebarHeader, SidebarTrigger, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
+import { Sidebar, SidebarProvider, SidebarInset, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton } from "@/components/ui/sidebar";
 import { LayoutGrid, GanttChartSquare } from "lucide-react";
 import { AuthProvider } from "@/context/auth-context";
 import { ProtectedRoute } from "@/components/protected-route";

@@ -9,7 +9,7 @@ interface WhatsAppButtonProps extends ComponentProps<typeof Button> {
 }
 
 export function WhatsAppButton({ message, children, className, ...props }: WhatsAppButtonProps) {
-  const phoneNumber = "+237697266183"; // Placeholder Cameroon number
+  const phoneNumber = "+237678502271";
   const encodedMessage = encodeURIComponent(message);
   const href = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 

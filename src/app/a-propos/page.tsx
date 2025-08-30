@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { values, testimonials, siteConfig } from "@/lib/data";
 import type { Metadata } from 'next';
 import { db } from "@/lib/firebase";
@@ -38,7 +38,7 @@ Aujourd'hui, avec ${siteConfig.name}, je mets mon savoir-faire à votre service 
   return (
     <div className="container mx-auto px-4 md:px-6 py-12 md:py-20">
       <div className="text-center mb-12">
-        <h1 className="text-4xl md:text-5xl font-extrabold font-headline">L'Artisan derrière l'étincelle</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold font-headline">L&apos;Artisan derrière l&apos;étincelle</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
           La passion du métal, transmise et perfectionnée au fil des années.
         </p>
@@ -91,7 +91,7 @@ Aujourd'hui, avec ${siteConfig.name}, je mets mon savoir-faire à votre service 
             {testimonials.map((testimonial, index) => (
                 <Card key={index} className="shadow-lg">
                     <CardContent className="pt-6">
-                        <blockquote className="text-lg text-muted-foreground italic mb-4">"{testimonial.quote}"</blockquote>
+                        <blockquote className="text-lg text-muted-foreground italic mb-4">&quot;{testimonial.quote}&quot;</blockquote>
                         <div className="flex items-center gap-4">
                             <Avatar>
                                 <AvatarFallback>{testimonial.author.charAt(0)}</AvatarFallback>

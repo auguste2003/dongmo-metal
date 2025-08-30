@@ -25,7 +25,7 @@ export default function ContactPage() {
       <div className="text-center mb-12">
         <h1 className="text-4xl md:text-5xl font-extrabold font-headline">Entrons en contact</h1>
         <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
-          Une question ? Un projet ? N'hésitez pas à me joindre. Je suis à votre disposition pour discuter de vos besoins.
+          Une question ? Un projet ? N&apos;hésitez pas à me joindre. Je suis à votre disposition pour discuter de vos besoins.
         </p>
       </div>
 
@@ -65,7 +65,7 @@ export default function ContactPage() {
               <div className="border-t pt-6">
                 <h3 className="font-semibold text-lg flex items-center gap-2 mb-4">
                   <Clock className="text-accent" />
-                  Horaires d'ouverture
+                  Horaires d&apos;ouverture
                 </h3>
                 <ul className="space-y-1 text-muted-foreground">
                   <li>Lundi - Vendredi : 08h00 - 18h00</li>
@@ -77,7 +77,7 @@ export default function ContactPage() {
                <div className="border-t pt-6">
                 <h3 className="font-semibold text-lg flex items-center gap-2 mb-2">
                   <MapPin className="text-accent" />
-                  Adresse de l'atelier
+                  Adresse de l&apos;atelier
                 </h3>
                 <p className="text-muted-foreground">Nkolbisson-Béaltitude, Yaoundé, Cameroun</p>
               </div>

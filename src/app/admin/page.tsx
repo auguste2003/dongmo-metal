@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,14 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { categories } from '@/lib/data';
+import { categories, Project } from '@/lib/data';
 import Image from "next/image";
 import { Loader2, Trash2, Edit } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
 
-// Check if we are on the client side
-const isBrowser = typeof window !== 'undefined';
 
 const projectSchema = z.object({
   title: z.string().min(1, 'Le titre est requis.'),
@@ -33,7 +31,7 @@ const projectSchema = z.object({
   }),
   year: z.coerce.number().optional(),
   location: z.string().optional(),
-  image: isBrowser ? z.instanceof(FileList).optional() : z.any(),
+  image: z.any().optional(),
 });
 
 type ProjectFormValues = z.infer<typeof projectSchema>;
@@ -45,19 +43,20 @@ const editProjectSchema = projectSchema.extend({
 type EditProjectFormValues = z.infer<typeof editProjectSchema>;
 
 const heroSchema = z.object({
-    media: isBrowser ? z.instanceof(FileList).refine(files => files.length > 0, 'Un fichier est requis.') : z.any(),
+    media: z.any().refine(files => files?.length > 0, 'Un fichier est requis.'),
 });
 type HeroFormValues = z.infer<typeof heroSchema>;
 
 const aboutSchema = z.object({
-    image: isBrowser ? z.instanceof(FileList).optional() : z.any(),
+    image: z.any().optional(),
     story: z.string().optional(),
 });
 type AboutFormValues = z.infer<typeof aboutSchema>;
 
+type ProjectDocument = Project & { id: string };
 
 export default function AdminPage() {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects, setProjects] = useState<ProjectDocument[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [heroLoading, setHeroLoading] = useState(false);
@@ -94,12 +93,12 @@ export default function AdminPage() {
   const fetchProjects = async () => {
     setIsFetching(true);
     const querySnapshot = await getDocs(collection(db, 'projects'));
-    const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ProjectDocument));
     setProjects(projectsData);
     setIsFetching(false);
   };
   
-   const fetchSiteConfig = async () => {
+   const fetchSiteConfig = useCallback(async () => {
     const heroDocRef = doc(db, 'site_config', 'hero');
     const heroSnap = await getDoc(heroDocRef);
     if (heroSnap.exists()) {
@@ -114,12 +113,12 @@ export default function AdminPage() {
       setCurrentStory(aboutData.story || '');
       aboutForm.reset({ story: aboutData.story || '' });
     }
-  };
+  }, [aboutForm]);
 
   useEffect(() => {
     fetchProjects();
     fetchSiteConfig();
-  }, []);
+  }, [fetchSiteConfig]);
 
   const onSubmit = async (data: ProjectFormValues) => {
     setLoading(true);
@@ -173,7 +172,7 @@ export default function AdminPage() {
             }
         }
 
-        const { id, image, ...updateData } = data;
+        const { id: dataId, image: dataImage, ...updateData } = data;
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
@@ -284,8 +283,8 @@ const onAboutSubmit = async (data: AboutFormValues) => {
       <div className="container mx-auto px-4 md:px-6 py-12">
         <Card className="mb-12">
             <CardHeader>
-                <CardTitle>Gestion de la page d'accueil</CardTitle>
-                <CardDescription>Mettez à jour l'image ou la vidéo de la section principale.</CardDescription>
+                <CardTitle>Gestion de la page d&apos;accueil</CardTitle>
+                <CardDescription>Mettez à jour l&apos;image ou la vidéo de la section principale.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="mb-6">
@@ -305,20 +304,20 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                         <FormField
                             control={heroForm.control}
                             name="media"
-                            render={({ field }) => (
+                            render={() => (
                             <FormItem>
                                 <FormLabel>Nouveau média (Image ou Vidéo)</FormLabel>
                                 <FormControl>
                                 <Input type="file" accept="image/*,video/*" {...heroForm.register('media')} />
                                 </FormControl>
-                                <FormDescription>Le nouveau média remplacera l'actuel.</FormDescription>
+                                <FormDescription>Le nouveau média remplacera l&apos;actuel.</FormDescription>
                                 <FormMessage />
                             </FormItem>
                             )}
                         />
                         <Button type="submit" disabled={heroLoading}>
                             {heroLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Mettre à jour le média d'accueil
+                            Mettre à jour le média d&apos;accueil
                         </Button>
                     </form>
                 </Form>
@@ -327,14 +326,14 @@ const onAboutSubmit = async (data: AboutFormValues) => {
 
         <Card className="mb-12">
             <CardHeader>
-                <CardTitle>Gestion de la page "À Propos"</CardTitle>
-                <CardDescription>Mettez à jour la photo et l'histoire de l'artisan.</CardDescription>
+                <CardTitle>Gestion de la page &quot;À Propos&quot;</CardTitle>
+                <CardDescription>Mettez à jour la photo et l&apos;histoire de l&apos;artisan.</CardDescription>
             </CardHeader>
             <CardContent>
                  <Form {...aboutForm}>
                     <form onSubmit={aboutForm.handleSubmit(onAboutSubmit)} className="space-y-8">
                          <div className="space-y-4">
-                            <h3 className="font-medium mb-2">Photo de l'artisan</h3>
+                            <h3 className="font-medium mb-2">Photo de l&apos;artisan</h3>
                             {currentAboutImage ? (
                                 <div className="relative w-64 h-80">
                                    <Image src={currentAboutImage} alt="Portrait de l'artisan" fill className="object-cover rounded-md" />
@@ -343,7 +342,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                             <FormField
                                 control={aboutForm.control}
                                 name="image"
-                                render={({ field }) => (
+                                render={() => (
                                 <FormItem>
                                     <FormLabel>Changer la photo</FormLabel>
                                     <FormControl>
@@ -357,13 +356,13 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                         </div>
                         
                         <div className="space-y-2">
-                             <h3 className="font-medium">Histoire de l'artisan</h3>
+                             <h3 className="font-medium">Histoire de l&apos;artisan</h3>
                              <FormField
                                 control={aboutForm.control}
                                 name="story"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Texte de "Mon Histoire"</FormLabel>
+                                        <FormLabel>Texte de &quot;Mon Histoire&quot;</FormLabel>
                                         <FormControl>
                                             <Textarea {...field} rows={8} placeholder="Racontez votre parcours..." />
                                         </FormControl>
@@ -375,7 +374,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
 
                         <Button type="submit" disabled={aboutLoading}>
                             {aboutLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Mettre à jour la page "À Propos"
+                            Mettre à jour la page &quot;À Propos&quot;
                         </Button>
                     </form>
                 </Form>
@@ -394,14 +393,14 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                  <FormField
                   control={form.control}
                   name="image"
-                  render={({ field }) => (
+                  render={() => (
                   <FormItem>
                     <FormLabel>Image du projet</FormLabel>
                     <FormControl>
                       <Input type="file" accept="image/*" {...imageRef} />
                     </FormControl>
                     <FormDescription>
-                      L'image est requise pour chaque projet.
+                      L&apos;image est requise pour chaque projet.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -528,13 +527,13 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                                 <FormField
                                     control={editForm.control}
                                     name="image"
-                                    render={({ field }) => (
+                                    render={() => (
                                     <FormItem>
-                                        <FormLabel>Changer l'image (Optionnel)</FormLabel>
+                                        <FormLabel>Changer l&apos;image (Optionnel)</FormLabel>
                                         <FormControl>
                                         <Input type="file" accept="image/*" {...editForm.register('image')} />
                                         </FormControl>
-                                        <FormDescription>Laissez vide pour conserver l'image actuelle.</FormDescription>
+                                        <FormDescription>Laissez vide pour conserver l&apos;image actuelle.</FormDescription>
                                     </FormItem>
                                     )}
                                 />
@@ -569,7 +568,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            Cette action est irréversible. Le projet "{project.title}" sera définitivement supprimé.
+                            Cette action est irréversible. Le projet &quot;{project.title}&quot; sera définitivement supprimé.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
@@ -591,5 +590,3 @@ const onAboutSubmit = async (data: AboutFormValues) => {
     </main>
   );
 }
-
-    
