@@ -33,7 +33,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
         setShowHint(false);
         try {
           sessionStorage.setItem('galleryHintShown', 'true');
-        } catch (e) {
+        } catch {
           console.warn("Session storage is not available.");
         }
       }, 8000); // Increased duration to 8 seconds

@@ -43,7 +43,7 @@ const editProjectSchema = projectSchema.extend({
 type EditProjectFormValues = z.infer<typeof editProjectSchema>;
 
 const heroSchema = z.object({
-    media: z.any().refine(files => files?.length > 0, 'Un fichier est requis.'),
+    media: z.any().refine((files): files is File[] => files?.length > 0, 'Un fichier est requis.'),
 });
 type HeroFormValues = z.infer<typeof heroSchema>;
 
@@ -90,13 +90,13 @@ export default function AdminPage() {
     defaultValues: { story: '' }
   });
 
-  const fetchProjects = async () => {
+  const fetchProjects = useCallback(async () => {
     setIsFetching(true);
     const querySnapshot = await getDocs(collection(db, 'projects'));
     const projectsData = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ProjectDocument));
     setProjects(projectsData);
     setIsFetching(false);
-  };
+  }, []);
   
    const fetchSiteConfig = useCallback(async () => {
     const heroDocRef = doc(db, 'site_config', 'hero');
@@ -118,7 +118,7 @@ export default function AdminPage() {
   useEffect(() => {
     fetchProjects();
     fetchSiteConfig();
-  }, [fetchSiteConfig]);
+  }, [fetchProjects, fetchSiteConfig]);
 
   const onSubmit = async (data: ProjectFormValues) => {
     setLoading(true);
@@ -172,7 +172,7 @@ export default function AdminPage() {
             }
         }
 
-        const { id: dataId, image: dataImage, ...updateData } = data;
+        const { id, image, ...updateData } = data;
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
@@ -304,7 +304,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                         <FormField
                             control={heroForm.control}
                             name="media"
-                            render={() => (
+                            render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Nouveau média (Image ou Vidéo)</FormLabel>
                                 <FormControl>
@@ -342,7 +342,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                             <FormField
                                 control={aboutForm.control}
                                 name="image"
-                                render={() => (
+                                render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Changer la photo</FormLabel>
                                     <FormControl>
@@ -505,7 +505,7 @@ const onAboutSubmit = async (data: AboutFormValues) => {
                   </div>
                   <CardHeader>
                     <CardTitle>{project.title}</CardTitle>
-                    <CardDescription>{project.category}</CardDescription>
+                    <CardDescription>{categories.find(c => c.key === project.category)?.label}</CardDescription>
                   </CardHeader>
                   <CardContent className="flex-grow">
                     <p className="text-muted-foreground text-sm line-clamp-3">{project.description || "Pas de description."}</p>
