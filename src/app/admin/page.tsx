@@ -173,7 +173,7 @@ export default function AdminPage() {
             }
         }
 
-        const { id: dataId, image: dataImage, ...updateData } = data;
+        const { id, image, ...updateData } = data;
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
