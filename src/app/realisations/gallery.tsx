@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +13,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Hand } from "lucide-react";
 
 interface GalleryProps {
   allProjects: Project[];
@@ -20,6 +23,24 @@ interface GalleryProps {
 
 export default function Gallery({ allProjects, categories }: GalleryProps) {
   const [filter, setFilter] = useState<ProjectCategory | 'tous'>('tous');
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  useEffect(() => {
+    const hintShown = sessionStorage.getItem('scrollHintShown');
+    if (!hintShown) {
+      setShowScrollHint(true);
+      const timer = setTimeout(() => {
+        setShowScrollHint(false);
+        try {
+          sessionStorage.setItem('scrollHintShown', 'true');
+        } catch (e) {
+          console.warn("Session storage is not available.");
+        }
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
 
   const filteredProjects = filter === 'tous'
     ? allProjects
@@ -27,19 +48,30 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
 
   return (
     <div>
-      <Tabs
-        defaultValue="tous"
-        onValueChange={(value) => setFilter(value as ProjectCategory | 'tous')}
-        className="flex justify-center mb-8"
-      >
-        <TabsList className="grid grid-cols-3 sm:grid-cols-6 h-auto">
-          {categories.map((cat) => (
-            <TabsTrigger key={cat.key} value={cat.key} className="text-sm md:text-base">
-              {cat.label}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-      </Tabs>
+      <div className="relative flex justify-center mb-8">
+        {showScrollHint && (
+           <div className="md:hidden absolute -top-14 left-0 right-0 mx-auto w-fit animate-in fade-in-0 slide-in-from-top-5 duration-500">
+            <Alert className="shadow-md">
+                <Hand className="h-4 w-4 -rotate-90" />
+                <AlertDescription>
+                  Faites défiler pour voir plus de catégories.
+                </AlertDescription>
+              </Alert>
+           </div>
+        )}
+        <Tabs
+          defaultValue="tous"
+          onValueChange={(value) => setFilter(value as ProjectCategory | 'tous')}
+        >
+          <TabsList className="grid-cols-none sm:grid-cols-6 h-auto overflow-x-auto">
+            {categories.map((cat) => (
+              <TabsTrigger key={cat.key} value={cat.key} className="text-sm md:text-base">
+                {cat.label}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </Tabs>
+      </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredProjects.map((project) => (
@@ -91,3 +123,4 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
     </div>
   );
 }
+

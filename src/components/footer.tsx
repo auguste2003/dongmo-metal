@@ -5,7 +5,7 @@ import { siteConfig } from '@/lib/data';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
-  const phoneNumber = "+237612345678"; // Placeholder
+  const phoneNumber = "+237678502271"; // Placeholder
   
   return (
     <footer className="bg-primary text-primary-foreground mt-12">
