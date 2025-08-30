@@ -48,14 +48,15 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
 
   return (
     <div>
-      <div className="relative flex justify-center mb-8">
+       <div className="flex justify-center mb-8">
         <Tabs
           defaultValue="tous"
           onValueChange={(value) => setFilter(value as ProjectCategory | 'tous')}
+          className="w-full"
         >
-          <TabsList className="grid-cols-none sm:grid-cols-6 h-auto overflow-x-auto">
+          <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:grid-cols-6">
             {categories.map((cat) => (
-              <TabsTrigger key={cat.key} value={cat.key} className="text-sm md:text-base">
+              <TabsTrigger key={cat.key} value={cat.key}>
                 {cat.label}
               </TabsTrigger>
             ))}
