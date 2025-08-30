@@ -174,7 +174,10 @@ export default function AdminPage() {
             }
         }
 
-        const { id: dataId, image: dataImage, ...updateData } = data;
+        const updateData = { ...data };
+        delete (updateData as Partial<typeof updateData>).id;
+        delete (updateData as Partial<typeof updateData>).image;
+        
         await updateDoc(projectRef, {
           ...updateData,
           imageUrl,
