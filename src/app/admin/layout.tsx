@@ -28,16 +28,24 @@ export default function AdminLayout({
                             </SidebarHeader>
                             <SidebarMenu>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton href="/admin" isActive={true} tooltip="Projets">
-                                        <LayoutGrid />
-                                        <span>Projets</span>
-                                    </SidebarMenuButton>
+                                    <Link href="/admin" legacyBehavior passHref>
+                                        <SidebarMenuButton asChild isActive={true} tooltip="Projets">
+                                            <span>
+                                                <LayoutGrid />
+                                                <span>Projets</span>
+                                            </span>
+                                        </SidebarMenuButton>
+                                    </Link>
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton href="#" tooltip="Services">
-                                        <GanttChartSquare />
-                                        <span>Services</span>
-                                    </SidebarMenuButton>
+                                    <Link href="#" legacyBehavior passHref>
+                                        <SidebarMenuButton asChild tooltip="Services">
+                                            <span>
+                                                <GanttChartSquare />
+                                                <span>Services</span>
+                                            </span>
+                                        </SidebarMenuButton>
+                                    </Link>
                                 </SidebarMenuItem>
                             </SidebarMenu>
                         </Sidebar>
