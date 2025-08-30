@@ -36,7 +36,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
         } catch {
           console.warn("Session storage is not available.");
         }
-      }, 8000); // Increased duration to 8 seconds
+      }, 8000);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -52,9 +52,8 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
         <Tabs
           defaultValue="tous"
           onValueChange={(value) => setFilter(value as ProjectCategory | 'tous')}
-          className="w-full"
         >
-          <TabsList className="w-full sm:grid sm:w-auto sm:grid-cols-6">
+          <TabsList className="h-auto flex-wrap sm:grid sm:h-10 sm:w-auto sm:grid-cols-6">
             {categories.map((cat) => (
               <TabsTrigger key={cat.key} value={cat.key}>
                 {cat.label}
