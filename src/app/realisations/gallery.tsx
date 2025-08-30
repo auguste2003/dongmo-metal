@@ -54,7 +54,7 @@ export default function Gallery({ allProjects, categories }: GalleryProps) {
           onValueChange={(value) => setFilter(value as ProjectCategory | 'tous')}
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:grid-cols-6">
+          <TabsList className="w-full sm:grid sm:w-auto sm:grid-cols-6">
             {categories.map((cat) => (
               <TabsTrigger key={cat.key} value={cat.key}>
                 {cat.label}
