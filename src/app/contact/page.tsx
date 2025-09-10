@@ -96,7 +96,7 @@ export default function ContactPage() {
                         allowFullScreen={true}
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        title="Localisation de l'atelier DONGMO METAL CONCEPTION"
+                        title={`Localisation de l'atelier ${siteConfig.name}`}
                     ></iframe>
                 </div>
             </Card>
