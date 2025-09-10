@@ -15,9 +15,37 @@ const ptSans = PT_Sans({
   variable: '--font-pt-sans',
 })
 
+const defaultUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  title: `${siteConfig.name} - concevoir le devoir`,
+  metadataBase: new URL(defaultUrl),
+  title: {
+    default: `${siteConfig.name} - concevoir le devoir`,
+    template: `%s - ${siteConfig.name}`
+  },
   description: 'Artisan soudeur au Cameroun. Créations sur mesure de portails, barrières, rampes et plus. Solidité, élégance, fiabilité.',
+  openGraph: {
+    title: `${siteConfig.name} - concevoir le devoir`,
+    description: 'Artisan soudeur spécialisé dans la création sur mesure d\'ouvrages métalliques.',
+    url: defaultUrl,
+    siteName: siteConfig.name,
+    images: [
+      {
+        url: '/logo_.png',
+        width: 512,
+        height: 512,
+        alt: `Logo de ${siteConfig.name}`,
+      },
+    ],
+    locale: 'fr_FR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${siteConfig.name} - concevoir le devoir`,
+    description: 'Artisan soudeur spécialisé dans la création sur mesure d\'ouvrages métalliques.',
+    images: ['/logo_.png'],
+  },
 };
 
 export default function RootLayout({
