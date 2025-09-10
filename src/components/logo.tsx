@@ -3,7 +3,7 @@ import { siteConfig } from "@/lib/data";
 
 export function Logo() {
   return (
-    <div className="flex items-center gap-2" style={{ width: 'max-content' }}>
+    <div className="flex items-center gap-2">
         <Image 
           src="/logo_.png" 
           alt={`${siteConfig.name} Logo`}
