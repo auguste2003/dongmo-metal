@@ -15,7 +15,7 @@ const ptSans = PT_Sans({
   variable: '--font-pt-sans',
 })
 
-const defaultUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://dogmo-metal.netlify.app');
+const defaultUrl = process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://dongmo.netlify.app');
 
 
 export const metadata: Metadata = {
@@ -24,10 +24,10 @@ export const metadata: Metadata = {
     default: `${siteConfig.name} - concevoir le devoir`,
     template: `%s - ${siteConfig.name}`
   },
-  description: "Artisan soudeur au Cameroun. Créations sur mesure de portails, barrières, rampes et plus. Solidité, élégance, fiabilité.",
+  description: 'Artisan soudeur au Cameroun. Créations sur mesure de portails, barrières, rampes et plus. Solidité, élégance, fiabilité.',
   openGraph: {
     title: `${siteConfig.name} - concevoir le devoir`,
-    description: "Artisan soudeur spécialisé dans la création sur mesure d'ouvrages métalliques.",
+    description: 'Artisan soudeur spécialisé dans la création sur mesure d\'ouvrages métalliques.',
     url: defaultUrl,
     siteName: siteConfig.name,
     images: [
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: `${siteConfig.name} - concevoir le devoir`,
-    description: "Artisan soudeur spécialisé dans la création sur mesure d'ouvrages métalliques.",
+    description: 'Artisan soudeur spécialisé dans la création sur mesure d\'ouvrages métalliques.',
     images: ['/logo_.png'],
   },
 };
